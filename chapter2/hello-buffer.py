@@ -13,11 +13,17 @@ struct data_t {
  
 int hello(void *ctx) {
    struct data_t data = {}; 
-   char message[12] = "Hello World";
- 
+   char even[12] = "Hello Werld";
+   char odd[12] = "Hello World";
+   char *message = even;
+
    data.pid = bpf_get_current_pid_tgid() >> 32;
    data.uid = bpf_get_current_uid_gid() & 0xFFFFFFFF;
    
+   if (data.uid % 2) {
+       message = odd;
+    }
+
    bpf_get_current_comm(&data.command, sizeof(data.command));
    bpf_probe_read_kernel(&data.message, sizeof(data.message), message); 
  
